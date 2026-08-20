@@ -1,0 +1,75 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  type?: "WebSite" | "Article";
+  publishedAt?: Date;
+  updatedAt?: Date;
+  tags?: string[];
+}
+
+const { title, description, type = "WebSite", publishedAt, updatedAt, tags = [] } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const pageTitle = title === "HEMEM" ? title : `${title} | HEMEM`;
+const structuredData = type === "Article"
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: title,
+      description,
+      url: canonicalURL.href,
+      datePublished: publishedAt?.toISOString(),
+      dateModified: (updatedAt ?? publishedAt)?.toISOString(),
+      keywords: tags,
+      inLanguage: "zh-CN",
+      isPartOf: {
+        "@type": "WebSite",
+        name: "HEMEM",
+        url: new URL("/", Astro.site).href,
+      },
+      about: {
+        "@type": "Thing",
+        name: "家用新能源里程平衡模型",
+        alternateName: "Household Electric Mobility Equilibrium Model",
+      },
+    }
+  : {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: title,
+      alternateName: "Household Electric Mobility Equilibrium Model",
+      description,
+      url: canonicalURL.href,
+      inLanguage: "zh-CN",
+      about: {
+        "@type": "Thing",
+        name: "家用新能源里程平衡模型",
+      },
+    };
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="theme-color" content="#f4f2eb" />
+    <meta property="og:type" content={type === "Article" ? "article" : "website"} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:locale" content="zh_CN" />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" type="application/rss+xml" title="HEMEM 研究更新" href={new URL("rss.xml", Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{pageTitle}</title>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

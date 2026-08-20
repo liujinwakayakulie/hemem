@@ -1,0 +1,53 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  publishedAt: Date;
+  updatedAt?: Date;
+  tags: string[];
+  sources: string[];
+}
+
+const { title, description, publishedAt, updatedAt, tags, sources } = Astro.props;
+const dateFormatter = new Intl.DateTimeFormat("zh-CN", { dateStyle: "long", timeZone: "Asia/Shanghai" });
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="Article"
+  publishedAt={publishedAt}
+  updatedAt={updatedAt}
+  tags={tags}
+>
+  <header class="site-header">
+    <a class="wordmark" href="/" aria-label="HEMEM 首页">
+      <span class="wordmark-mark" aria-hidden="true">H</span>
+      <span>HEMEM</span>
+    </a>
+    <nav aria-label="文章导航"><a href="/#research">研究索引</a><a href="/llms.txt">llms.txt</a></nav>
+  </header>
+  <main class="article-shell">
+    <article>
+      <header class="article-header">
+        <p class="section-index">HEMEM / 研究文章</p>
+        <h1>{title}</h1>
+        <p class="article-description">{description}</p>
+        <dl class="article-meta">
+          <div><dt>发布</dt><dd><time datetime={publishedAt.toISOString()}>{dateFormatter.format(publishedAt)}</time></dd></div>
+          {updatedAt && <div><dt>更新</dt><dd><time datetime={updatedAt.toISOString()}>{dateFormatter.format(updatedAt)}</time></dd></div>}
+          <div><dt>标签</dt><dd>{tags.join(" · ")}</dd></div>
+        </dl>
+      </header>
+      <div class="article-content"><slot /></div>
+      {sources.length > 0 && (
+        <footer class="article-sources">
+          <h2>资料来源</h2>
+          <ol>{sources.map((source) => <li><a href={source} rel="noreferrer">{source}</a></li>)}</ol>
+        </footer>
+      )}
+    </article>
+  </main>
+</BaseLayout>
