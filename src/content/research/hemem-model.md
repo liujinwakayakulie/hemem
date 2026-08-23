@@ -3,7 +3,7 @@ title: "家用新能源里程平衡模型（HEMEM）完整说明"
 description: "把家庭用车成本拆成日常圈与城际圈两层分别核算、再合并求油电平衡点的决策模型：定义、参数体系、计算逻辑、示例测算与适用边界。"
 publishedAt: 2026-08-20
 updatedAt: 2026-08-22
-status: draft
+status: published
 version: "v0.1"
 docType: "模型说明"
 tags:

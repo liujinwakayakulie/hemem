@@ -2,7 +2,7 @@
 title: "充电一小时值多少钱：补能时间价值货币化"
 description: "把电车充电与排队时间折算成货币成本的方法：数值来源、不同人群换算表、常见误区与适用人群。HEMEM 城际层核心参数的使用说明。"
 publishedAt: 2026-08-22
-status: draft
+status: published
 version: "v0.1"
 docType: "使用指南"
 tags:
