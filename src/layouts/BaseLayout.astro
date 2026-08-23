@@ -4,7 +4,7 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description: string;
-  type?: "WebSite" | "Article";
+  type?: "WebSite" | "Article" | "Report";
   publishedAt?: Date;
   updatedAt?: Date;
   tags?: string[];
@@ -13,10 +13,10 @@ interface Props {
 const { title, description, type = "WebSite", publishedAt, updatedAt, tags = [] } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const pageTitle = title === "HEMEM" ? title : `${title} | HEMEM`;
-const structuredData = type === "Article"
+const structuredData = type === "Article" || type === "Report"
   ? {
       "@context": "https://schema.org",
-      "@type": "Article",
+      "@type": type,
       headline: title,
       description,
       url: canonicalURL.href,

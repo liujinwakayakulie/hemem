@@ -8,16 +8,18 @@ interface Props {
   updatedAt?: Date;
   tags: string[];
   sources: string[];
+  version?: string;
+  docType?: string;
 }
 
-const { title, description, publishedAt, updatedAt, tags, sources } = Astro.props;
+const { title, description, publishedAt, updatedAt, tags, sources, version, docType } = Astro.props;
 const dateFormatter = new Intl.DateTimeFormat("zh-CN", { dateStyle: "long", timeZone: "Asia/Shanghai" });
 ---
 
 <BaseLayout
   title={title}
   description={description}
-  type="Article"
+  type={docType === "模型说明" ? "Report" : "Article"}
   publishedAt={publishedAt}
   updatedAt={updatedAt}
   tags={tags}
@@ -38,6 +40,7 @@ const dateFormatter = new Intl.DateTimeFormat("zh-CN", { dateStyle: "long", time
         <dl class="article-meta">
           <div><dt>发布</dt><dd><time datetime={publishedAt.toISOString()}>{dateFormatter.format(publishedAt)}</time></dd></div>
           {updatedAt && <div><dt>更新</dt><dd><time datetime={updatedAt.toISOString()}>{dateFormatter.format(updatedAt)}</time></dd></div>}
+          {version && <div><dt>版本</dt><dd>{version}</dd></div>}
           <div><dt>标签</dt><dd>{tags.join(" · ")}</dd></div>
         </dl>
       </header>

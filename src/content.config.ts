@@ -10,6 +10,8 @@ const research = defineCollection({
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
     status: z.enum(["draft", "review", "published"]).default("draft"),
+    version: z.string().optional(),
+    docType: z.enum(["模型说明", "情景研究", "使用指南"]).optional(),
     tags: z.array(z.string()).default([]),
     sources: z.array(z.url()).default([]),
   }),
