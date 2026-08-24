@@ -35,7 +35,9 @@ const publishedResearch = (await getCollection("research", ({ data }) => data.st
     href: `/research/${entry.id}/`,
   }));
 
-const plannedResearch = [
+type ResearchItem = { type: string; title: string; text: string; status: string; href?: string };
+
+const plannedResearch: ResearchItem[] = [
   {
     type: "使用指南",
     title: "如何读懂一份家庭用车 TCO 对比",
