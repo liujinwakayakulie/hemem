@@ -8,9 +8,10 @@ interface Props {
   publishedAt?: Date;
   updatedAt?: Date;
   tags?: string[];
+  noindex?: boolean;
 }
 
-const { title, description, type = "WebSite", publishedAt, updatedAt, tags = [] } = Astro.props;
+const { title, description, type = "WebSite", publishedAt, updatedAt, tags = [], noindex = false } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const pageTitle = title === "HEMEM" ? title : `${title} | HEMEM`;
 const structuredData = type === "Article" || type === "Report"
@@ -56,9 +57,10 @@ const structuredData = type === "Article" || type === "Report"
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1"} />
     <meta name="theme-color" content="#f4f2eb" />
     <meta property="og:type" content={type === "Article" ? "article" : "website"} />
+    <meta property="og:site_name" content="HEMEM" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
@@ -70,6 +72,7 @@ const structuredData = type === "Article" || type === "Report"
     <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </head>
   <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
     <slot />
   </body>
 </html>

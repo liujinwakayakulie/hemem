@@ -11,10 +11,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <span class="wordmark-mark" aria-hidden="true">H</span>
       <span>HEMEM</span>
     </a>
-    <nav aria-label="主要导航"><a href="/#research">研究索引</a><a href="/llms.txt">llms.txt</a></nav>
+    <nav aria-label="主要导航"><a href="/#research">研究索引</a><a href="/self-check/" aria-current="page">决策自检</a><a href="/llms.txt">llms.txt</a></nav>
   </header>
 
-  <main class="tool-shell">
+  <main class="tool-shell" id="main">
     <section class="tool-intro">
       <p class="section-index">决策自检 / v0.2</p>
       <h1>两分钟判断：你家该不该买电车</h1>
@@ -84,7 +84,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </fieldset>
       </form>
 
-      <aside class="tool-result" id="tool-result" aria-live="polite"></aside>
+      <aside class="tool-result" id="tool-result" aria-live="polite">
+        <noscript>
+          <p class="result-noscript">这个自检工具需要启用 JavaScript 才能实时计算。可以先读 <a href="/research/hemem-model/">HEMEM 完整说明</a>，或者直接看下方参数明细手动推演。</p>
+        </noscript>
+      </aside>
     </div>
 
     <details class="tool-params">
@@ -115,7 +119,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     padding: 48px 24px 80px;
   }
   .tool-intro h1 {
-    font-family: "Songti SC", "Noto Serif CJK SC", serif;
+    font-family: var(--font-serif);
     font-size: 40px;
     line-height: 1.25;
     margin: 12px 0 16px;
@@ -171,9 +175,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     border: 1px solid var(--line);
     font-size: 14px;
     background: var(--canvas);
-    transition: all 0.15s;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
     min-width: 44px;
     text-align: center;
+  }
+  .pill-group label:hover span {
+    border-color: var(--ink-soft);
   }
   .pill-group input:checked + span {
     background: var(--ink);
@@ -198,20 +205,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
   .result-chip {
     display: block;
+    font-family: var(--font-mono);
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0.35em;
     color: var(--muted);
     margin-bottom: 6px;
   }
   .result-verdict {
-    font-family: "Songti SC", "Noto Serif CJK SC", serif;
+    font-family: var(--font-serif);
     font-size: 38px;
     line-height: 1.15;
     margin: 0 0 10px;
   }
   .result-verdict.green { color: var(--green); }
-  .result-verdict.amber { color: #9a7514; }
+  .result-verdict.amber { color: var(--amber-ink); }
   .result-verdict.coral { color: var(--coral); }
   .result-oneliner {
     font-size: 15px;
@@ -239,6 +247,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     font-size: 24px;
     font-weight: 700;
     line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+  }
+  .result-noscript {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+  .result-noscript a {
+    color: var(--green);
   }
   .result-nums dd small {
     font-size: 12px;
@@ -273,6 +291,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     cursor: pointer;
     font-size: 13px;
     font-weight: 700;
+    transition: color 0.15s;
+  }
+  .tool-params summary:hover {
+    color: var(--green);
   }
   .tool-params ul {
     margin: 12px 0 4px;

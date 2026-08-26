@@ -48,7 +48,6 @@ const plannedResearch: ResearchItem[] = [
 
 const research = [...publishedResearch, ...plannedResearch];
 ---
----
 
 <BaseLayout
   title="HEMEM"
@@ -67,7 +66,7 @@ const research = [...publishedResearch, ...plannedResearch];
     </nav>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <p class="eyebrow">Household Electric Mobility Equilibrium Model</p>
@@ -136,7 +135,7 @@ const research = [...publishedResearch, ...plannedResearch];
     <section class="section research-section" id="research" aria-labelledby="research-title">
       <div class="section-heading-row">
         <div><p class="section-index">02 / 研究索引</p><h2 id="research-title">从模型定义开始，<br />逐步公开验证过程</h2></div>
-        <p>以下内容正在准备。正式发布时，每篇研究将注明数据来源、更新时间、假设条件与修订记录。</p>
+        <p>每篇研究都注明数据来源、更新时间、假设条件与修订记录；尚未完成的研究会标出当前状态。</p>
       </div>
       <div class="research-list">
         {research.map((item, index) => (
@@ -145,7 +144,7 @@ const research = [...publishedResearch, ...plannedResearch];
             <h3>{item.href ? <a href={item.href}>{item.title}</a> : item.title}</h3>
             <p>{item.text}</p>
             <footer>
-              <span class="status-dot" aria-hidden="true"></span>{item.status}
+              <span class={`status-dot${item.href ? "" : " status-dot--todo"}`} aria-hidden="true"></span>{item.status}
               {item.href && <a class="research-read" href={item.href}>阅读全文 <span aria-hidden="true">↗</span></a>}
             </footer>
           </article>
@@ -179,9 +178,9 @@ const research = [...publishedResearch, ...plannedResearch];
     </section>
 
     <section class="current-status" aria-labelledby="status-title">
-      <p class="section-index">当前状态 / 2026</p>
-      <h2 id="status-title">研究框架与网站基础设施正在建立。</h2>
-      <p>模型公式、参数来源和首轮情景研究将在完成核验后逐项公开。当前页面中的模型视图是结构示意，不构成购车建议。</p>
+      <p class="section-index">当前状态 / 2026-08</p>
+      <h2 id="status-title">模型、六篇核心研究和决策自检工具已经上线。</h2>
+      <p>全部参数按 2026 年 8 月北京口径核验，行情变化后会重新测算并更新版本号。下一步：补充更多城市的参数，以及一篇教你读懂 TCO 对比的使用指南。</p>
     </section>
   </main>
 

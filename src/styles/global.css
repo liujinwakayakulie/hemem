@@ -3,14 +3,23 @@
   --canvas: #f4f2eb;
   --paper: #fbfaf6;
   --ink: #16221c;
+  --ink-soft: #3f4943;
   --muted: #667069;
+  --muted-on-green: #b8c9c0;
   --line: #cfd2ca;
+  --line-strong: #b8bdb4;
+  --canvas-deep: #e6e8df;
+  --track: #d8ddd7;
   --green: #1d5b46;
   --green-dark: #12392d;
   --coral: #d65f42;
   --amber: #d9a33a;
+  --amber-ink: #9a7514;
   --max-width: 1440px;
-  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-serif: Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", serif;
+  --font-mono: "SF Mono", ui-monospace, "JetBrains Mono", "Cascadia Mono", monospace;
+  font-family: var(--font-sans);
   background: var(--canvas);
   color: var(--ink);
   font-synthesis: none;
@@ -32,6 +41,29 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+.skip-link {
+  position: fixed;
+  top: -60px;
+  left: 16px;
+  z-index: 30;
+  padding: 10px 16px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 700;
+  transition: top 0.15s;
+}
+
+.skip-link:focus {
+  top: 12px;
 }
 
 p,
@@ -73,6 +105,16 @@ ol {
   letter-spacing: 0.12em;
 }
 
+.wordmark:hover,
+.wordmark:focus-visible {
+  color: var(--green);
+}
+
+.wordmark:hover .wordmark-mark,
+.wordmark:focus-visible .wordmark-mark {
+  background: var(--green-dark);
+}
+
 .wordmark-mark {
   display: grid;
   width: 34px;
@@ -80,7 +122,7 @@ ol {
   place-items: center;
   background: var(--green);
   color: white;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-serif);
   font-size: 20px;
   letter-spacing: 0;
 }
@@ -93,7 +135,7 @@ ol {
 .site-header nav a {
   padding: 8px 0;
   border-bottom: 1px solid transparent;
-  color: #3f4943;
+  color: var(--ink-soft);
   font-size: 14px;
 }
 
@@ -101,6 +143,12 @@ ol {
 .site-header nav a:focus-visible {
   border-color: var(--green);
   color: var(--green);
+}
+
+.site-header nav a[aria-current="page"] {
+  border-color: var(--ink);
+  color: var(--ink);
+  font-weight: 700;
 }
 
 main,
@@ -124,15 +172,16 @@ main,
 .eyebrow,
 .section-index {
   color: var(--green);
+  font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .hero h1 {
   margin-top: 30px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-serif);
   font-size: 124px;
   font-weight: 400;
   line-height: 0.82;
@@ -142,14 +191,14 @@ main,
 .hero-name {
   margin-top: 22px;
   color: var(--green);
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-family: var(--font-serif);
   font-size: 25px;
   font-weight: 700;
 }
 
 .hero-lead {
   margin-top: 48px;
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-family: var(--font-serif);
   font-size: 35px;
   font-weight: 600;
   line-height: 1.35;
@@ -175,12 +224,13 @@ main,
   min-height: 48px;
   align-items: center;
   justify-content: center;
-  gap: 32px;
+  gap: 10px;
   padding: 0 18px;
   border: 1px solid var(--green-dark);
   border-radius: 2px;
   font-size: 14px;
   font-weight: 700;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .button-primary {
@@ -198,6 +248,13 @@ main,
   padding: 9px 0;
   font-size: 14px;
   font-weight: 700;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.text-link:hover,
+.text-link:focus-visible {
+  color: var(--green);
+  border-color: var(--green);
 }
 
 .hero-facts {
@@ -220,8 +277,9 @@ main,
 
 .hero-facts dt {
   color: var(--muted);
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .hero-facts dd {
@@ -246,8 +304,9 @@ main,
   justify-content: space-between;
   padding-bottom: 18px;
   border-bottom: 1px solid var(--ink);
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.08em;
 }
 
@@ -267,7 +326,7 @@ main,
   position: relative;
   height: 8px;
   margin-top: 18px;
-  background: #d8ddd7;
+  background: var(--track);
 }
 
 .axis-fill {
@@ -329,7 +388,7 @@ main,
 }
 
 .factor-grid strong {
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-family: var(--font-serif);
   font-size: 17px;
 }
 
@@ -357,12 +416,12 @@ main,
 }
 
 .thesis p {
-  color: #b8c9c0;
+  color: var(--muted-on-green);
   font-size: 14px;
 }
 
 .thesis strong {
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-family: var(--font-serif);
   font-size: 25px;
   line-height: 1.5;
 }
@@ -383,7 +442,7 @@ main,
 .boundaries h2,
 .current-status h2 {
   margin-top: 22px;
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-family: var(--font-serif);
   font-size: 50px;
   font-weight: 600;
   line-height: 1.2;
@@ -414,12 +473,12 @@ main,
 .question-number {
   padding-top: 5px;
   color: var(--coral);
-  font-family: Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 14px;
 }
 
 .question-list h3 {
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-family: var(--font-serif);
   font-size: 23px;
   line-height: 1.45;
 }
@@ -465,21 +524,36 @@ main,
   padding: 28px;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+  transition: background-color 0.15s;
+}
+
+.research-list article:hover {
+  background: var(--canvas);
+}
+
+.research-list article:first-child {
+  grid-column: span 2;
 }
 
 .research-meta {
   display: flex;
   justify-content: space-between;
   color: var(--muted);
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .research-list h3 {
-  margin-top: 70px;
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  margin-top: 28px;
+  font-family: var(--font-serif);
   font-size: 28px;
   line-height: 1.35;
+}
+
+.research-list article:first-child h3 {
+  font-size: 34px;
+  max-width: 640px;
 }
 
 .research-list h3 a {
@@ -526,6 +600,10 @@ main,
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  background: var(--green);
+}
+
+.status-dot--todo {
   background: var(--amber);
 }
 
@@ -543,12 +621,12 @@ main,
 
 .method-steps > li > span {
   color: var(--green);
-  font-family: Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 14px;
 }
 
 .method-steps h3 {
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-family: var(--font-serif);
   font-size: 20px;
 }
 
@@ -565,7 +643,7 @@ main,
   gap: 80px;
   padding: 80px 72px;
   border-bottom: 1px solid var(--line);
-  background: #e6e8df;
+  background: var(--canvas-deep);
 }
 
 .boundaries h2 {
@@ -580,7 +658,7 @@ main,
 .boundaries li {
   position: relative;
   padding: 20px 20px 20px 30px;
-  border-bottom: 1px solid #b8bdb4;
+  border-bottom: 1px solid var(--line-strong);
   font-size: 15px;
   line-height: 1.6;
 }
@@ -628,7 +706,7 @@ main,
 }
 
 .site-footer strong {
-  font-family: Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 18px;
 }
 
@@ -640,6 +718,13 @@ main,
 .site-footer a {
   border-bottom: 1px solid var(--ink);
   padding-block: 4px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.site-footer a:hover,
+.site-footer a:focus-visible {
+  color: var(--green);
+  border-color: var(--green);
 }
 
 .article-shell {
@@ -659,7 +744,7 @@ main,
 
 .article-header h1 {
   margin-top: 22px;
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-family: var(--font-serif);
   font-size: 54px;
   font-weight: 600;
   line-height: 1.2;
@@ -681,14 +766,16 @@ main,
 
 .article-meta dt {
   color: var(--muted);
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .article-meta dd {
   margin-top: 6px;
   font-size: 13px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .article-content {
@@ -699,7 +786,7 @@ main,
 
 .article-content h2 {
   margin: 56px 0 18px;
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-family: var(--font-serif);
   font-size: 30px;
 }
 
@@ -707,6 +794,39 @@ main,
 .article-content ul,
 .article-content ol {
   margin-top: 18px;
+  text-wrap: pretty;
+}
+
+.article-content table {
+  width: 100%;
+  margin-top: 24px;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.article-content th,
+.article-content td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.article-content thead th {
+  background: var(--canvas);
+  font-weight: 700;
+}
+
+.article-content blockquote {
+  margin-top: 24px;
+  padding: 14px 18px;
+  border-left: 3px solid var(--green);
+  background: var(--canvas);
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.8;
 }
 
 .article-content a,
@@ -723,7 +843,7 @@ main,
 }
 
 .article-sources h2 {
-  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-family: var(--font-serif);
   font-size: 24px;
 }
 
@@ -813,6 +933,14 @@ main,
 
   .research-list article {
     min-height: 290px;
+  }
+
+  .research-list article:first-child {
+    grid-column: auto;
+  }
+
+  .research-list article:first-child h3 {
+    max-width: none;
   }
 
   .research-list h3 {
@@ -940,6 +1068,11 @@ main,
     padding-block: 68px 90px;
   }
 
+  .article-content table {
+    display: block;
+    overflow-x: auto;
+  }
+
   .article-header h1 {
     font-size: 38px;
   }
@@ -987,5 +1120,34 @@ main,
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+@media print {
+  .site-header,
+  .site-footer,
+  .skip-link {
+    display: none;
+  }
+
+  body,
+  .article-shell,
+  .research-section {
+    background: white;
+  }
+
+  .article-shell {
+    padding: 0;
+    border-inline: 0;
+  }
+
+  .article-content a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .article-content table,
+  .article-content blockquote {
+    break-inside: avoid;
   }
 }

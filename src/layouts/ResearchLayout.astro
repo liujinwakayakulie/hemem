@@ -29,9 +29,9 @@ const dateFormatter = new Intl.DateTimeFormat("zh-CN", { dateStyle: "long", time
       <span class="wordmark-mark" aria-hidden="true">H</span>
       <span>HEMEM</span>
     </a>
-    <nav aria-label="文章导航"><a href="/#research">研究索引</a><a href="/llms.txt">llms.txt</a></nav>
+    <nav aria-label="文章导航"><a href="/#research" aria-current="page">研究索引</a><a href="/self-check/">决策自检</a><a href="/llms.txt">llms.txt</a></nav>
   </header>
-  <main class="article-shell">
+  <main class="article-shell" id="main">
     <article>
       <header class="article-header">
         <p class="section-index">HEMEM / 研究文章</p>
@@ -41,7 +41,7 @@ const dateFormatter = new Intl.DateTimeFormat("zh-CN", { dateStyle: "long", time
           <div><dt>发布</dt><dd><time datetime={publishedAt.toISOString()}>{dateFormatter.format(publishedAt)}</time></dd></div>
           {updatedAt && <div><dt>更新</dt><dd><time datetime={updatedAt.toISOString()}>{dateFormatter.format(updatedAt)}</time></dd></div>}
           {version && <div><dt>版本</dt><dd>{version}</dd></div>}
-          <div><dt>标签</dt><dd>{tags.join(" · ")}</dd></div>
+          <div><dt>标签</dt><dd>{tags.join("、")}</dd></div>
         </dl>
       </header>
       <div class="article-content"><slot /></div>
