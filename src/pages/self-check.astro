@@ -17,10 +17,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <main class="tool-shell">
     <section class="tool-intro">
       <p class="section-index">决策自检 / v0.1</p>
-      <h1>五分钟判断：你家该不该买电车</h1>
+      <h1>两分钟判断：你家该不该买电车</h1>
       <p>
         先交代一下这个页面是什么。HEMEM 系列的六篇文章把低里程家庭的油电账拆完了：账面、保险、续航、节假日、时间、家充。
-        这个工具把它们收口——你回答 5 个问题，我实时算出你家的回本年限和长途体检，并告诉你下一步该读哪篇。参数为北京 2026 年 8 月核验口径（明细在页脚），结论方向供参考，不构成购车建议。
+        这个工具把它们收口——你点六组选项，我实时算出你家的回本年限和长途体检，并告诉你下一步该读哪篇。参数为北京 2026 年 8 月核验口径（明细在页脚），结论方向供参考，不构成购车建议。
       </p>
     </section>
 
@@ -107,7 +107,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   </footer>
 </BaseLayout>
 
-<style>
+<style is:global>
   .tool-shell {
     max-width: 1080px;
     margin: 0 auto;
@@ -190,21 +190,33 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     background: var(--paper);
     padding: 24px;
   }
-  .result-badge {
-    display: inline-block;
-    padding: 6px 14px;
-    font-weight: 700;
-    font-size: 13px;
-    color: var(--paper);
-    margin-bottom: 12px;
+  .result-head {
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 18px;
+    margin-bottom: 18px;
   }
-  .result-badge.green { background: var(--green); }
-  .result-badge.amber { background: var(--amber); color: var(--ink); }
-  .result-badge.coral { background: var(--coral); }
+  .result-chip {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .result-verdict {
+    font-family: "Songti SC", "Noto Serif CJK SC", serif;
+    font-size: 38px;
+    line-height: 1.15;
+    margin: 0 0 10px;
+  }
+  .result-verdict.green { color: var(--green); }
+  .result-verdict.amber { color: #9a7514; }
+  .result-verdict.coral { color: var(--coral); }
   .result-oneliner {
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.7;
-    margin: 0 0 20px;
+    margin: 0;
+    color: var(--ink);
   }
   .result-nums {
     display: grid;
@@ -223,9 +235,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
   .result-nums dd {
     margin: 6px 0 0;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.25;
   }
   .result-nums dd small {
     font-size: 12px;
@@ -281,9 +293,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   const NET_GAP = 8300;      // 净购置差价（元）
   const HOLD_YEARS = 5;      // 持有期（年）
   const FIXED = -1100;       // 保险−保养净支出（元/年）
-  const CITY_DIFF = { yes: 0.514, no: 0.436 }; // 日常单位能源差（元/km）
+  const CITY_DIFF: Record<string, number> = { yes: 0.514, no: 0.436 }; // 日常单位能源差（元/km）
   const HWAY_DIFF = 0.34;    // 高速单位能源差（元/km）
-  const QUEUE_MIN = { weekday: 10, mixed: 50, holiday: 90 };
+  const QUEUE_MIN: Record<string, number> = { weekday: 10, mixed: 50, holiday: 90 };
   const EFF_RANGE = { low: 165, high: 415 };   // 标称 500km 的有效出行距离
 
   const val = (name: string) => (document.querySelector(`input[name=${name}]:checked`) as HTMLInputElement).value;
@@ -369,8 +381,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       : "——";
 
     document.getElementById("tool-result")!.innerHTML = `
-      <span class="result-badge ${v.tier}">${v.label}</span>
-      <p class="result-oneliner">${v.text}</p>
+      <div class="result-head">
+        <span class="result-chip">你的结论</span>
+        <h2 class="result-verdict ${v.tier}">${v.label}</h2>
+        <p class="result-oneliner">${v.text}</p>
+      </div>
       <dl class="result-nums">
         <div><dt>回本时间</dt><dd>${fmtPayback(r.payback)}</dd></div>
         <div><dt>平衡日常里程</dt><dd>${Math.round(r.dStar / 100) * 100 < 100 ? "<100" : `约 ${Math.round(r.dStar / 100) * 100} km`}<small> / 年 ${diffLine}</small></dd></div>
