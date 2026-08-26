@@ -4,7 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 <BaseLayout
   title="决策自检：你家该不该买电车"
-  description="回答 5 个问题，实时输出你家的油电平衡账：回本年限、平衡里程、长途体检与下一步阅读。基于 HEMEM v0.2.1 北京核验参数。"
+  description="点六组选项，实时输出你家的油电平衡账：差价追平时间、平衡里程、长途体检与下一步阅读。基于 HEMEM v0.2.2 北京核验参数。"
 >
   <header class="site-header">
     <a class="wordmark" href="/" aria-label="HEMEM 首页">
@@ -16,11 +16,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   <main class="tool-shell">
     <section class="tool-intro">
-      <p class="section-index">决策自检 / v0.1</p>
+      <p class="section-index">决策自检 / v0.2</p>
       <h1>两分钟判断：你家该不该买电车</h1>
       <p>
         先交代一下这个页面是什么。HEMEM 系列的六篇文章把低里程家庭的油电账拆完了：账面、保险、续航、节假日、时间、家充。
-        这个工具把它们收口——你点六组选项，我实时算出你家的回本年限和长途体检，并告诉你下一步该读哪篇。参数为北京 2026 年 8 月核验口径（明细在页脚），结论方向供参考，不构成购车建议。
+        这个工具把它们收口——你点六组选项，我实时算出你家的差价追平时间和长途体检，并告诉你下一步该读哪篇。参数为北京 2026 年 8 月核验口径（明细在页脚），结论方向供参考，不构成购车建议。
       </p>
     </section>
 
@@ -90,6 +90,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <details class="tool-params">
       <summary>这个工具用了哪些参数？（点开看明细）</summary>
       <ul>
+        <li><strong>差值账口径</strong>：只核算油电之间有差异的成本项——购置差价、能源、保险、保养、残值与补能时间；停车、洗车、过路费等双方相同的支出不入账（它们不改变选择）</li>
         <li>净购置差价 8,300 元（同级样本差价 11,600 − 4 年残值差约 3,300，2026-08 车主成交均价与协会保值率报告）</li>
         <li>保险 − 保养净支出 1,100 元/年（行业车均口径 2,105，保养估算 1,000）</li>
         <li>日常单位能源差：有家充 0.514 元/km、无家充 0.436 元/km（北京 2026-08 核验价）</li>
@@ -318,7 +319,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   function fmtPayback(p: number | null) {
-    if (p === null) return "回不了本";
+    if (p === null) return "追不平差价";
     if (p < 1) return "不到 1 年";
     return `约 ${p.toFixed(1)} 年`;
   }
@@ -346,7 +347,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         text: "5 年持有期刚好压线——账面能不能过，取决于你的里程再往上走一点，或者保险口径比行业均值友好一点。" };
     }
     return { tier: "coral", label: "账面不成立",
-      text: "按这套参数，回本时间明显超过持有期——账外理由（牌照、体验、静音）得足够硬才值得买。" };
+      text: "按这套参数，追平差价的时间明显超过持有期——账外理由（牌照、体验、静音）得足够硬才值得买。" };
   }
 
   function rangeCheck(r: ReturnType<typeof compute>) {
@@ -387,7 +388,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <p class="result-oneliner">${v.text}</p>
       </div>
       <dl class="result-nums">
-        <div><dt>回本时间</dt><dd>${fmtPayback(r.payback)}</dd></div>
+        <div><dt>追平差价</dt><dd>${fmtPayback(r.payback)}</dd></div>
         <div><dt>平衡日常里程</dt><dd>${Math.round(r.dStar / 100) * 100 < 100 ? "<100" : `约 ${Math.round(r.dStar / 100) * 100} km`}<small> / 年 ${diffLine}</small></dd></div>
         <div style="grid-column: 1 / -1;"><dt>单次长途（${r.N === 0 ? "不适用" : r.L + " km"}）</dt><dd>${sTripStr}</dd></div>
       </dl>
