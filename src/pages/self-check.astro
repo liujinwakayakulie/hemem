@@ -258,11 +258,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .result-noscript a {
     color: var(--green);
   }
-  .result-nums dd small {
-    font-size: 12px;
-    font-weight: 400;
-    color: var(--muted);
-  }
   .result-section h3 {
     font-size: 13px;
     margin: 18px 0 8px;
@@ -400,7 +395,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const sTripStr = r.N === 0 ? "—" : (r.sTrip >= 0 ? `电车净省约 ${Math.round(r.sTrip)} 元` : `电车反亏约 ${Math.round(-r.sTrip)} 元`);
     const links = nextReading(r).map(([t, h]) => `<li><a href="${h}">${t}</a></li>`).join("");
     const dStarShown = Math.round(r.dStar / 100) * 100;
-    const gateLine = `你的 ${r.D.toLocaleString()} km，${r.D >= r.dStar ? "过了" : "没到"}`;
 
     document.getElementById("tool-result")!.innerHTML = `
       <div class="result-head">
@@ -410,7 +404,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
       <dl class="result-nums">
         <div><dt>追平差价</dt><dd>${fmtPayback(r.payback)}</dd></div>
-        <div><dt>日常里程及格线</dt><dd>${dStarShown < 100 ? "不设门槛" : `约 ${dStarShown.toLocaleString()} km`}<small> / 年 · ${gateLine}</small></dd></div>
+        <div><dt>日常里程及格线</dt><dd>${dStarShown < 100 ? "不设门槛" : `约 ${dStarShown.toLocaleString()} km`}</dd></div>
         <div style="grid-column: 1 / -1;"><dt>单次长途（${r.N === 0 ? "不适用" : r.L + " km"}）</dt><dd>${sTripStr}</dd></div>
       </dl>
       <div class="result-section">
