@@ -1,0 +1,389 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="决策自检：你家该不该买电车"
+  description="回答 5 个问题，实时输出你家的油电平衡账：回本年限、平衡里程、长途体检与下一步阅读。基于 HEMEM v0.2.1 北京核验参数。"
+>
+  <header class="site-header">
+    <a class="wordmark" href="/" aria-label="HEMEM 首页">
+      <span class="wordmark-mark" aria-hidden="true">H</span>
+      <span>HEMEM</span>
+    </a>
+    <nav aria-label="主要导航"><a href="/#research">研究索引</a><a href="/llms.txt">llms.txt</a></nav>
+  </header>
+
+  <main class="tool-shell">
+    <section class="tool-intro">
+      <p class="section-index">决策自检 / v0.1</p>
+      <h1>五分钟判断：你家该不该买电车</h1>
+      <p>
+        先交代一下这个页面是什么。HEMEM 系列的六篇文章把低里程家庭的油电账拆完了：账面、保险、续航、节假日、时间、家充。
+        这个工具把它们收口——你回答 5 个问题，我实时算出你家的回本年限和长途体检，并告诉你下一步该读哪篇。参数为北京 2026 年 8 月核验口径（明细在页脚），结论方向供参考，不构成购车建议。
+      </p>
+    </section>
+
+    <div class="tool-grid">
+      <form class="tool-form" id="tool-form">
+        <fieldset>
+          <legend>1. 家里能装充电桩吗？</legend>
+          <div class="pill-group">
+            <label><input type="radio" name="charger" value="yes" checked /><span>有家充</span></label>
+            <label><input type="radio" name="charger" value="no" /><span>装不了</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>2. 一年日常里程大概多少？<small>通勤 + 市内，不算长途</small></legend>
+          <div class="pill-group">
+            <label><input type="radio" name="mileage" value="3000" /><span>3,000 km</span></label>
+            <label><input type="radio" name="mileage" value="5000" checked /><span>5,000 km</span></label>
+            <label><input type="radio" name="mileage" value="8000" /><span>8,000 km</span></label>
+            <label><input type="radio" name="mileage" value="10000" /><span>10,000 km</span></label>
+            <label><input type="radio" name="mileage" value="12000" /><span>12,000+ km</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>3. 一年跑几次跨城长途？</legend>
+          <div class="pill-group">
+            <label><input type="radio" name="trips" value="0" /><span>几乎不跑</span></label>
+            <label><input type="radio" name="trips" value="2" /><span>1–3 次</span></label>
+            <label><input type="radio" name="trips" value="4" checked /><span>4–8 次</span></label>
+            <label><input type="radio" name="trips" value="12" /><span>8 次以上</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>4. 单次长途多远？<small>取最典型的那条线</small></legend>
+          <div class="pill-group">
+            <label><input type="radio" name="distance" value="150" /><span>200 km 内</span></label>
+            <label><input type="radio" name="distance" value="300" /><span>200–400 km</span></label>
+            <label><input type="radio" name="distance" value="500" checked /><span>400–600 km</span></label>
+            <label><input type="radio" name="distance" value="700" /><span>600 km 以上</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>5. 长途主要什么时候跑？</legend>
+          <div class="pill-group">
+            <label><input type="radio" name="timing" value="weekday" checked /><span>基本在平日</span></label>
+            <label><input type="radio" name="timing" value="mixed" /><span>平时节假日都有</span></label>
+            <label><input type="radio" name="timing" value="holiday" /><span>基本在节假日</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>6. 你的时间值多少钱？<small>选「一般」就行；拿不准看<a href="/research/charging-time-value/">这篇</a></small></legend>
+          <div class="pill-group">
+            <label><input type="radio" name="vot" value="54" checked /><span>不敏感（50 元/h）</span></label>
+            <label><input type="radio" name="vot" value="120" /><span>一般（120 元/h）</span></label>
+            <label><input type="radio" name="vot" value="220" /><span>很值钱（220 元/h）</span></label>
+          </div>
+        </fieldset>
+      </form>
+
+      <aside class="tool-result" id="tool-result" aria-live="polite"></aside>
+    </div>
+
+    <details class="tool-params">
+      <summary>这个工具用了哪些参数？（点开看明细）</summary>
+      <ul>
+        <li>净购置差价 8,300 元（同级样本差价 11,600 − 4 年残值差约 3,300，2026-08 车主成交均价与协会保值率报告）</li>
+        <li>保险 − 保养净支出 1,100 元/年（行业车均口径 2,105，保养估算 1,000）</li>
+        <li>日常单位能源差：有家充 0.514 元/km、无家充 0.436 元/km（北京 2026-08 核验价）</li>
+        <li>高速单位能源差 0.34 元/km；快充 30 分钟 + 排队按档位 10/50/90 分钟，排队按充电价签的 1.33 倍</li>
+        <li>有效出行距离按标称 500 km 车型取 165–415 km（孙叶、刘锴 2017）</li>
+        <li>持有期 5 年。全部参数细节与来源见 <a href="/research/hemem-model/">HEMEM 完整说明</a></li>
+      </ul>
+    </details>
+  </main>
+
+  <footer class="site-footer">
+    <div><strong>HEMEM</strong><span>家用新能源里程平衡模型</span></div>
+    <p>独立研究项目 · 结论随行情重算</p>
+    <a href="/llms.txt">llms.txt</a>
+  </footer>
+</BaseLayout>
+
+<style>
+  .tool-shell {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  .tool-intro h1 {
+    font-family: "Songti SC", "Noto Serif CJK SC", serif;
+    font-size: 40px;
+    line-height: 1.25;
+    margin: 12px 0 16px;
+  }
+  .tool-intro p {
+    color: var(--muted);
+    max-width: 640px;
+    line-height: 1.85;
+    font-size: 15px;
+  }
+  .tool-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+    gap: 32px;
+    margin-top: 40px;
+    align-items: start;
+  }
+  .tool-form fieldset {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    padding: 18px 20px 20px;
+    margin: 0 0 14px;
+  }
+  .tool-form legend {
+    font-weight: 700;
+    font-size: 14px;
+    padding: 0 6px;
+  }
+  .tool-form legend small {
+    display: block;
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .pill-group label {
+    cursor: pointer;
+  }
+  .pill-group input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .pill-group span {
+    display: inline-block;
+    padding: 9px 16px;
+    border: 1px solid var(--line);
+    font-size: 14px;
+    background: var(--canvas);
+    transition: all 0.15s;
+    min-width: 44px;
+    text-align: center;
+  }
+  .pill-group input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .pill-group input:focus-visible + span {
+    outline: 2px solid var(--green);
+    outline-offset: 2px;
+  }
+  .tool-result {
+    position: sticky;
+    top: 24px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    padding: 24px;
+  }
+  .result-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--paper);
+    margin-bottom: 12px;
+  }
+  .result-badge.green { background: var(--green); }
+  .result-badge.amber { background: var(--amber); color: var(--ink); }
+  .result-badge.coral { background: var(--coral); }
+  .result-oneliner {
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 0 0 20px;
+  }
+  .result-nums {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .result-nums div {
+    border: 1px solid var(--line);
+    padding: 12px;
+  }
+  .result-nums dt {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .result-nums dd {
+    margin: 6px 0 0;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .result-nums dd small {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .result-section h3 {
+    font-size: 13px;
+    margin: 18px 0 8px;
+  }
+  .result-section p,
+  .result-section li {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--muted);
+    margin: 0;
+  }
+  .result-section ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .result-section a {
+    color: var(--ink);
+  }
+  .tool-params {
+    margin-top: 32px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    padding: 14px 20px;
+  }
+  .tool-params summary {
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .tool-params ul {
+    margin: 12px 0 4px;
+    padding-left: 18px;
+  }
+  .tool-params li {
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+  @media (max-width: 860px) {
+    .tool-grid { grid-template-columns: 1fr; }
+    .tool-result { position: static; }
+    .tool-intro h1 { font-size: 30px; }
+  }
+</style>
+
+<script>
+  const NET_GAP = 8300;      // 净购置差价（元）
+  const HOLD_YEARS = 5;      // 持有期（年）
+  const FIXED = -1100;       // 保险−保养净支出（元/年）
+  const CITY_DIFF = { yes: 0.514, no: 0.436 }; // 日常单位能源差（元/km）
+  const HWAY_DIFF = 0.34;    // 高速单位能源差（元/km）
+  const QUEUE_MIN = { weekday: 10, mixed: 50, holiday: 90 };
+  const EFF_RANGE = { low: 165, high: 415 };   // 标称 500km 的有效出行距离
+
+  const val = (name: string) => (document.querySelector(`input[name=${name}]:checked`) as HTMLInputElement).value;
+
+  function compute() {
+    const charger = val("charger");
+    const D = Number(val("mileage"));
+    const N = Number(val("trips"));
+    const L = Number(val("distance"));
+    const timing = val("timing");
+    const vot = Number(val("vot"));
+
+    const timeCost = 0.5 * vot + (QUEUE_MIN[timing] / 60) * 1.33 * vot;
+    const sTrip = L * HWAY_DIFF - timeCost;
+    const dC = CITY_DIFF[charger];
+    const annual = D * dC + N * sTrip + FIXED;
+    const payback = annual > 0 ? NET_GAP / annual / 1 : null; // 年净省下每年摊
+    const dStar = Math.max(0, (NET_GAP / HOLD_YEARS - FIXED - N * sTrip) / dC);
+    return { charger, D, N, L, timing, vot, timeCost, sTrip, annual, payback, dStar };
+  }
+
+  function fmtPayback(p: number | null) {
+    if (p === null) return "回不了本";
+    if (p < 1) return "不到 1 年";
+    return `约 ${p.toFixed(1)} 年`;
+  }
+
+  function verdict(r: ReturnType<typeof compute>) {
+    if (r.annual <= 0) {
+      return { tier: "coral", label: "账面不成立",
+        text: "按这套参数，日常里程省不回差价——除非有牌照、体验这类账外理由，否则不用纠结，油车（或先解决家充）是更顺的答案。" };
+    }
+    const intercityRisk = r.N > 0 && (r.sTrip <= 30 || (r.L > EFF_RANGE.high && r.timing === "holiday"));
+    if (r.payback !== null && r.payback <= 5) {
+      if (r.N === 0) {
+        return { tier: "green", label: "可以买",
+          text: "长途不在你的生活里，账面这关一过，结论就定了——买电车，账是通的。" };
+      }
+      if (!intercityRisk) {
+        return { tier: "green", label: "可以买",
+          text: "账面成立，长途也没拖后腿。对你家来说，油电之间选电车，账是通的——剩下的只是口味问题。" };
+      }
+      return { tier: "amber", label: "看情况",
+        text: "账面过了，但长途那一环对你有硬伤（看下面的长途体检）。先解决硬伤，再谈买不买。" };
+    }
+    if (r.payback !== null && r.payback <= 6.5) {
+      return { tier: "amber", label: "压线",
+        text: "5 年持有期刚好压线——账面能不能过，取决于你的里程再往上走一点，或者保险口径比行业均值友好一点。" };
+    }
+    return { tier: "coral", label: "账面不成立",
+      text: "按这套参数，回本时间明显超过持有期——账外理由（牌照、体验、静音）得足够硬才值得买。" };
+  }
+
+  function rangeCheck(r: ReturnType<typeof compute>) {
+    if (r.N === 0) return "你几乎不跑长途——续航、排队、时间价值这些约束全部与你无关，这本身就是一种答案。";
+    const parts: string[] = [];
+    if (r.L > EFF_RANGE.high) parts.push(`单程 ${r.L} km 超出有效出行距离上限（标称 500 km 的车，安心上限约 ${EFF_RANGE.high} km）——途中充电是必然，一脚到不了`);
+    else if (r.L > EFF_RANGE.low) parts.push(`单程 ${r.L} km 在安心区内，但已进入心理阈值段（${EFF_RANGE.low}–${EFF_RANGE.high} km），出发前会想确认沿途桩况`);
+    else parts.push(`单程 ${r.L} km 是真短途，续航完全不构成约束`);
+    if (r.timing === "holiday") parts.push("节假日档：已按平均排队 1.5 小时计价，热门路段（3 小时）会反转单次优势");
+    if (r.vot >= 220) parts.push("时间价值高危档：接近 235 元/小时的长途逆转线");
+    return parts.join("；") + "。";
+  }
+
+  function nextReading(r: ReturnType<typeof compute>) {
+    const links: Array<[string, string]> = [];
+    if (r.charger === "no") links.push(["没家充怎么活", "/research/home-charging/"]);
+    if (r.timing === "holiday") links.push(["节假日排队的完整账", "/research/holiday-charging/"]);
+    if (r.L > EFF_RANGE.high) links.push(["标称续航为什么只能信一半", "/research/real-range/"]);
+    if (r.vot >= 120) links.push(["时间怎么折成钱", "/research/charging-time-value/"]);
+    links.push(["被保费吃掉的油费", "/research/insurance-premium-gap/"]);
+    links.push(["总账：城际长途才是分水岭", "/research/intercity-threshold/"]);
+    return links;
+  }
+
+  function render() {
+    const r = compute();
+    const v = verdict(r);
+    const sTripStr = r.N === 0 ? "—" : (r.sTrip >= 0 ? `电车净省约 ${Math.round(r.sTrip)} 元` : `电车反亏约 ${Math.round(-r.sTrip)} 元`);
+    const links = nextReading(r).map(([t, h]) => `<li><a href="${h}">${t}</a></li>`).join("");
+    const diffLine = r.payback !== null
+      ? `你的 ${r.D.toLocaleString()} km ${r.D >= r.dStar ? "≥" : "<"} 平衡点`
+      : "——";
+
+    document.getElementById("tool-result")!.innerHTML = `
+      <span class="result-badge ${v.tier}">${v.label}</span>
+      <p class="result-oneliner">${v.text}</p>
+      <dl class="result-nums">
+        <div><dt>回本时间</dt><dd>${fmtPayback(r.payback)}</dd></div>
+        <div><dt>平衡日常里程</dt><dd>${Math.round(r.dStar / 100) * 100 < 100 ? "<100" : `约 ${Math.round(r.dStar / 100) * 100} km`}<small> / 年 ${diffLine}</small></dd></div>
+        <div style="grid-column: 1 / -1;"><dt>单次长途（${r.N === 0 ? "不适用" : r.L + " km"}）</dt><dd>${sTripStr}</dd></div>
+      </dl>
+      <div class="result-section">
+        <h3>长途体检</h3>
+        <p>${rangeCheck(r)}</p>
+        <h3>下一步读什么</h3>
+        <ul>${links}</ul>
+      </div>`;
+  }
+
+  document.getElementById("tool-form")!.addEventListener("change", render);
+  render();
+</script>
