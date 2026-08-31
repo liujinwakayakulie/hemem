@@ -691,8 +691,8 @@ main,
 
 .site-footer {
   display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 36px;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 20px 32px;
   align-items: center;
   padding: 34px 72px;
   border-top: 1px solid var(--ink);

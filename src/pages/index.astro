@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import { getCollection } from "astro:content";
 
 const questions = [
@@ -184,9 +185,5 @@ const research = [...publishedResearch, ...plannedResearch];
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div><strong>HEMEM</strong><span>家用新能源里程平衡模型</span></div>
-    <p>独立研究项目 · 内容以公开页面的最新版本为准</p>
-    <a href="/llms.txt">llms.txt</a>
-  </footer>
+  <SiteFooter />
 </BaseLayout>

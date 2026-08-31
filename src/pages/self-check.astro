@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 ---
 
 <BaseLayout
@@ -105,11 +106,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </details>
   </main>
 
-  <footer class="site-footer">
-    <div><strong>HEMEM</strong><span>家用新能源里程平衡模型</span></div>
-    <p>独立研究项目 · 结论随行情重算</p>
-    <a href="/llms.txt">llms.txt</a>
-  </footer>
+  <SiteFooter />
 </BaseLayout>
 
 <style is:global>
