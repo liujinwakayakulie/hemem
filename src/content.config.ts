@@ -7,6 +7,7 @@ const research = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    takeaway: z.string().optional(),
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
     status: z.enum(["draft", "review", "published"]).default("draft"),

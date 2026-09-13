@@ -2,24 +2,31 @@
 import BaseLayout from "./BaseLayout.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 
+interface TocItem {
+  slug: string;
+  text: string;
+}
+
 interface Props {
   title: string;
   description: string;
+  takeaway?: string;
   publishedAt: Date;
   updatedAt?: Date;
   tags: string[];
   sources: string[];
   version?: string;
   docType?: string;
+  toc?: TocItem[];
 }
 
-const { title, description, publishedAt, updatedAt, tags, sources, version, docType } = Astro.props;
+const { title, description, takeaway, publishedAt, updatedAt, tags, sources, version, docType, toc = [] } = Astro.props;
 const dateFormatter = new Intl.DateTimeFormat("zh-CN", { dateStyle: "long", timeZone: "Asia/Shanghai" });
 ---
 
 <BaseLayout
   title={title}
-  description={description}
+  description={takeaway ? takeaway : description}
   type={docType === "模型说明" ? "Report" : "Article"}
   publishedAt={publishedAt}
   updatedAt={updatedAt}
@@ -30,29 +37,50 @@ const dateFormatter = new Intl.DateTimeFormat("zh-CN", { dateStyle: "long", time
       <span class="wordmark-mark" aria-hidden="true">H</span>
       <span>HEMEM</span>
     </a>
-    <nav aria-label="文章导航"><a href="/#research" aria-current="page">研究索引</a><a href="/self-check/">决策自检</a><a href="/llms.txt">llms.txt</a></nav>
+    <nav aria-label="文章导航"><a href="/#research">研究索引</a><a href="/self-check/">决策自检</a><a href="/llms.txt">llms.txt</a></nav>
   </header>
   <main class="article-shell" id="main">
-    <article>
-      <header class="article-header">
-        <p class="section-index">HEMEM / 研究文章</p>
-        <h1>{title}</h1>
-        <p class="article-description">{description}</p>
-        <dl class="article-meta">
-          <div><dt>发布</dt><dd><time datetime={publishedAt.toISOString()}>{dateFormatter.format(publishedAt)}</time></dd></div>
-          {updatedAt && <div><dt>更新</dt><dd><time datetime={updatedAt.toISOString()}>{dateFormatter.format(updatedAt)}</time></dd></div>}
-          {version && <div><dt>版本</dt><dd>{version}</dd></div>}
-          <div><dt>标签</dt><dd>{tags.join("、")}</dd></div>
-        </dl>
-      </header>
-      <div class="article-content"><slot /></div>
-      {sources.length > 0 && (
-        <footer class="article-sources">
-          <h2>资料来源</h2>
-          <ol>{sources.map((source) => <li><a href={source} rel="noreferrer">{source}</a></li>)}</ol>
-        </footer>
+    <div class="article-frame">
+      <article>
+        <header class="article-header">
+          <p class="section-index">HEMEM / {docType ?? "研究文章"}</p>
+          <h1>{title}</h1>
+          {takeaway && (
+            <p class="article-takeaway">
+              <span class="takeaway-label">结论</span>
+              {takeaway}
+            </p>
+          )}
+          <p class="article-description">{description}</p>
+          <p class="article-meta-inline">
+            <span>发布 <time datetime={publishedAt.toISOString()}>{dateFormatter.format(publishedAt)}</time></span>
+            {updatedAt && <span aria-hidden="true">·</span>}
+            {updatedAt && <span>更新 <time datetime={updatedAt.toISOString()}>{dateFormatter.format(updatedAt)}</time></span>}
+            {version && <span aria-hidden="true">·</span>}
+            {version && <span>{version}</span>}
+            <span aria-hidden="true">·</span>
+            <span>{tags.join("、")}</span>
+          </p>
+        </header>
+        <div class="article-content"><slot /></div>
+        {sources.length > 0 && (
+          <footer class="article-sources">
+            <h2>资料来源</h2>
+            <ol>{sources.map((source) => <li><a href={source} rel="noreferrer">{source}</a></li>)}</ol>
+          </footer>
+        )}
+      </article>
+      {toc.length > 1 && (
+        <nav class="toc-rail" aria-label="本文目录">
+          <p class="toc-title">本文结构</p>
+          <ol>
+            {toc.map((item) => (
+              <li><a href={`#${item.slug}`}>{item.text}</a></li>
+            ))}
+          </ol>
+        </nav>
       )}
-    </article>
+    </div>
   </main>
   <SiteFooter />
 </BaseLayout>

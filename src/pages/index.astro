@@ -31,7 +31,7 @@ const publishedResearch = (await getCollection("research", ({ data }) => data.st
   .map((entry) => ({
     type: entry.data.docType ?? "研究文章",
     title: entry.data.title,
-    text: entry.data.description,
+    text: entry.data.takeaway ?? entry.data.description,
     status: entry.data.version ? `已发布 · ${entry.data.version}` : "已发布",
     href: `/research/${entry.id}/`,
   }));
@@ -51,8 +51,8 @@ const research = [...publishedResearch, ...plannedResearch];
 ---
 
 <BaseLayout
-  title="HEMEM"
-  description="HEMEM 家用新能源里程平衡模型：研究家庭年行驶里程、总拥有成本与补能条件如何共同影响油车和新能源车的选择。"
+  title="油车还是电车：低里程家庭决策研究"
+  description="一年 5000 公里的家庭还该不该纠结油电：净差价约 8,300 元、年净省约 2,000 元、逆转点在节假日排队 2 小时——HEMEM 用可核验的参数给出分水岭。"
 >
   <header class="site-header">
     <a class="wordmark" href="/" aria-label="HEMEM 首页">
@@ -70,45 +70,44 @@ const research = [...publishedResearch, ...plannedResearch];
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow">Household Electric Mobility Equilibrium Model</p>
-        <h1 id="hero-title">HEMEM</h1>
-        <p class="hero-name">家用新能源里程平衡模型</p>
-        <p class="hero-lead">不只比较油价和电价，<br />而是找到属于一个家庭的成本平衡点。</p>
+        <p class="eyebrow">HEMEM · 家用新能源里程平衡模型</p>
+        <h1 id="hero-title">低里程家庭，<br />油车还是电车？</h1>
+        <p class="hero-lead">2026 年，这笔账的账面关已经过了——<br />真正要决定的是：你的一年几次长途，打算怎么过。</p>
         <p class="hero-summary">
-          HEMEM 是一个面向家庭购车决策的研究框架，用可核验的参数分析年行驶里程、购置与折旧、补能条件和持有周期之间的关系。
+          每个数字可核验、每篇结论先行。净差价约 8,300 元（紧凑级车主成交价，2026-08）；北京有家充、年 5,000 km，年净省约 2,000 元，约 4 年追平差价；节假日排队满 2 小时，单次长途优势归零。
         </p>
         <div class="hero-actions">
-          <a class="button button-primary" href="/self-check/">两分钟决策自检 <span aria-hidden="true">→</span></a>
-          <a class="text-link" href="#model">查看模型结构 <span aria-hidden="true">↓</span></a>
-          <a class="text-link" href="#research">浏览研究计划 <span aria-hidden="true">↗</span></a>
+          <a class="button button-primary" href="/research/intercity-threshold/">读旗舰篇：城际分水岭 <span aria-hidden="true">→</span></a>
+          <a class="text-link" href="/self-check/">两分钟决策自检 <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="#model">模型结构 <span aria-hidden="true">↓</span></a>
         </div>
-        <dl class="hero-facts" aria-label="项目原则">
-          <div><dt>对象</dt><dd>家庭用车决策</dd></div>
-          <div><dt>方法</dt><dd>情景化 TCO</dd></div>
-          <div><dt>原则</dt><dd>来源可查，边界明确</dd></div>
+        <dl class="hero-facts" aria-label="核心数字">
+          <div><dt>净差价（电−油）</dt><dd>约 8,300 元</dd></div>
+          <div><dt>年净省（有家充）</dt><dd>约 2,000 元</dd></div>
+          <div><dt>长途优势逆转点</dt><dd>排队 2 小时</dd></div>
         </dl>
       </div>
 
       <figure class="model-figure" aria-labelledby="figure-title">
         <figcaption>
-          <span id="figure-title">模型视图 / 结构示意</span>
-          <span>v0.1</span>
+          <span id="figure-title">模型视图 / 平衡区间</span>
+          <span>v0.2 · 北京 2026-08</span>
         </figcaption>
         <div class="model-axis" aria-hidden="true">
-          <div class="axis-labels"><span>燃油方案</span><span>新能源方案</span></div>
+          <div class="axis-labels"><span>年 2,000 km</span><span>平衡里程 D*</span><span>年 12,000 km</span></div>
           <div class="axis-track">
             <span class="axis-fill"></span>
             <span class="equilibrium-point"></span>
           </div>
-          <div class="equilibrium-label"><span>成本平衡区间</span><strong>取决于家庭参数</strong></div>
+          <div class="equilibrium-label"><span>有家充 · 4 次长途</span><strong>D* ≈ 4,400 km/年</strong></div>
         </div>
         <div class="factor-grid">
-          <div><span>F1</span><strong>购置与折旧</strong><small>初始差价 / 残值</small></div>
-          <div><span>F2</span><strong>补能条件</strong><small>家充 / 公充 / 油价</small></div>
-          <div><span>F3</span><strong>使用强度</strong><small>年里程 / 持有年限</small></div>
-          <div><span>F4</span><strong>风险边界</strong><small>保险 / 维修 / 波动</small></div>
+          <div><span>F1</span><strong>购置与折旧</strong><small>净差价 8,300 元</small></div>
+          <div><span>F2</span><strong>补能条件</strong><small>家充 0.47 元/度</small></div>
+          <div><span>F3</span><strong>使用强度</strong><small>日常里程 × 长途频次</small></div>
+          <div><span>F4</span><strong>风险边界</strong><small>保险差 2,100 元/年</small></div>
         </div>
-        <p class="figure-note">示意图仅表达模型结构，不代表任何车型的实际盈亏临界点。</p>
+        <p class="figure-note">D* 为平衡日常里程：低于它，5 年内追不平差价。数值为北京 2026-08 核验口径，随家充与长途频次移动，方法见模型页。</p>
       </figure>
     </section>
 
